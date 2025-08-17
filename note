@@ -1,0 +1,16 @@
+# View all running containers
+docker ps
+
+# Check application logs
+docker logs vue-starter-kit-app
+
+# Access the app container
+docker exec -it vue-starter-kit-app bash
+
+# Stop all services
+docker-compose down
+
+# Restart services
+docker-compose up -d
+
+docker-compose exec app sh

@@ -1,0 +1,56 @@
+# Docker ignore file for Laravel + Vue Starter Kit
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+DOCKER-README.md
+*.md
+
+# Node modules (will be installed in container)
+node_modules
+npm-debug.log*
+
+# Vendor (will be installed in container)
+vendor
+
+# Environment files (will be copied separately)
+.env
+.env.*
+
+# Laravel specific
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+
+# Build artifacts
+public/hot
+public/storage
+public/js
+public/css
+public/mix-manifest.json
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+.phpunit.result.cache
+
+# Temporary files
+*.tmp
+*.temp
+.cache

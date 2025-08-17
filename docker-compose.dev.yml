@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    container_name: vue-starter-kit-app-dev
+    ports:
+      - "8000:8000"  # Laravel development server
+      - "5173:5173"  # Vite development server with HMR
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/node_modules  # Anonymous volume for node_modules
+      - /var/www/html/vendor       # Anonymous volume for vendor
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=sqlite
+      - DB_DATABASE=/var/www/html/database/database.sqlite
+      - CACHE_DRIVER=file
+      - SESSION_DRIVER=file
+      - QUEUE_CONNECTION=sync
+      - VITE_APP_NAME=Laravel
+    working_dir: /var/www/html
+    command: >
+      sh -c "
+        php artisan key:generate --force &&
+        php artisan migrate --force &&
+        php artisan serve --host=0.0.0.0 --port=8000 &
+        npm run dev -- --host=0.0.0.0 --port=5173 &
+        wait
+      "
+    networks:
+      - laravel-dev
+
+networks:
+  laravel-dev:
+    driver: bridge
