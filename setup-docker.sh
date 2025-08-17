@@ -208,6 +208,20 @@ print_status "Running Laravel setup commands..."
 
 # Check if container is running
 if docker ps | grep -q $CONTAINER_NAME; then
+    print_status "Installing Redis client via Composer..."
+    # Install Predis Redis client (pure PHP implementation)
+    docker exec $CONTAINER_NAME composer require predis/predis
+    print_success "Redis client (Predis) installed successfully"
+    
+    print_status "Configuring Laravel to use Predis..."
+    # Update .env to use predis client
+    docker exec $CONTAINER_NAME sed -i 's/REDIS_CLIENT=phpredis/REDIS_CLIENT=predis/g' .env 2>/dev/null || true
+    # Add REDIS_CLIENT=predis if it doesn't exist
+    if ! docker exec $CONTAINER_NAME grep -q "REDIS_CLIENT=" .env; then
+        docker exec $CONTAINER_NAME sh -c 'echo "REDIS_CLIENT=predis" >> .env'
+    fi
+    print_success "Laravel configured to use Predis"
+    
     print_status "Installing Composer dependencies..."
     if [ "$env_choice" == "3" ]; then
         docker exec $CONTAINER_NAME composer install --no-dev --optimize-autoloader
