@@ -20,7 +20,12 @@ Route::get('dashboard', [DashboardController::class, 'index'])
 Route::middleware(['auth', 'verified', 'admin.only'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [AdminDashboardController::class, 'users'])->name('users');
+    Route::get('/users/create', [AdminDashboardController::class, 'createUser'])->name('users.create');
+    Route::post('/users', [AdminDashboardController::class, 'storeUser'])->name('users.store');
+    Route::get('/users/{user}/edit', [AdminDashboardController::class, 'editUser'])->name('users.edit');
+    Route::put('/users/{user}', [AdminDashboardController::class, 'updateUser'])->name('users.update');
     Route::put('/users/{user}/role', [AdminDashboardController::class, 'updateUserRole'])->name('users.updateRole');
+    Route::delete('/users/{user}', [AdminDashboardController::class, 'deleteUser'])->name('users.delete');
 });
 
 // Manager routes - ONLY managers can access
