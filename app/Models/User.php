@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +45,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if user has admin role
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user has manager role
+     */
+    public function isManager(): bool
+    {
+        return $this->role === 'manager';
+    }
+
+    /**
+     * Check if user has user role
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    /**
+     * Check if user has admin or manager role
+     */
+    public function isAdminOrManager(): bool
+    {
+        return in_array($this->role, ['admin', 'manager']);
     }
 }

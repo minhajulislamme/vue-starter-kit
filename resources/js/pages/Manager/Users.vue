@@ -1,0 +1,100 @@
+<template>
+  <Head title="Manager Users" />
+  
+  <AppLayout :breadcrumbs="breadcrumbs">
+    <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
+      <div class="bg-background overflow-hidden shadow-sm rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+        <div class="p-6 text-foreground">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold">Manage Users</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-border">
+              <thead class="bg-muted/50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Joined
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-background divide-y divide-border">
+                <tr v-for="user in users.data" :key="user.id">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
+                    {{ user.name }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                    {{ user.email }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                    {{ new Date(user.created_at).toLocaleDateString() }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span v-if="user.email_verified_at" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                      Active
+                    </span>
+                    <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                      Pending
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Pagination -->
+          <div v-if="users.links" class="mt-4">
+            <div class="flex justify-between items-center">
+              <div class="text-sm text-muted-foreground">
+                Showing {{ users.from }} to {{ users.to }} of {{ users.total }} results
+              </div>
+              <div class="flex space-x-2">
+                <Link 
+                  v-for="link in users.links" 
+                  :key="link.label"
+                  :href="link.url"
+                  v-html="link.label"
+                  :class="[
+                    'px-3 py-2 text-sm border rounded',
+                    link.active 
+                      ? 'bg-blue-500 text-white border-blue-500' 
+                      : 'bg-background text-foreground border-sidebar-border/70 hover:bg-muted/50'
+                  ]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </AppLayout>
+</template>
+
+<script setup>
+import AppLayout from '@/layouts/AppLayout.vue'
+import { Link, Head } from '@inertiajs/vue3'
+
+defineProps({
+  users: Object,
+})
+
+const breadcrumbs = [
+  {
+    title: 'Manager Dashboard',
+    href: '/manager/dashboard',
+  },
+  {
+    title: 'Users',
+    href: '/manager/users',
+  },
+]
+</script>

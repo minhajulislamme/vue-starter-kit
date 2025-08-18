@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class AdminOnly
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+
+        if ($user->role !== 'admin') {
+            // Redirect to user's appropriate dashboard
+            switch ($user->role) {
+                case 'manager':
+                    return redirect()->route('manager.dashboard')->with('error', 'Access denied. You can only access manager areas.');
+                case 'user':
+                    return redirect()->route('user.dashboard')->with('error', 'Access denied. You can only access user areas.');
+                default:
+                    return redirect()->route('user.dashboard')->with('error', 'Access denied.');
+            }
+        }
+
+        return $next($request);
+    }
+}
