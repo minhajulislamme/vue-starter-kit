@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\Product\AdminProductController;
 use App\Http\Controllers\Manager\ManagerDashboardController;
 use App\Http\Controllers\User\UserDashboardController;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -26,6 +28,11 @@ Route::middleware(['auth', 'verified', 'admin.only'])->prefix('admin')->name('ad
     Route::put('/users/{user}', [AdminDashboardController::class, 'updateUser'])->name('users.update');
     Route::put('/users/{user}/role', [AdminDashboardController::class, 'updateUserRole'])->name('users.updateRole');
     Route::delete('/users/{user}', [AdminDashboardController::class, 'deleteUser'])->name('users.delete');
+
+    // Products Group Route
+    Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
+   
 });
 
 // Manager routes - ONLY managers can access
